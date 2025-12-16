@@ -1,4 +1,5 @@
 services:
+  # Servicio de Base de Datos (PostgreSQL)
   db:
     image: postgres:15
     volumes:
@@ -8,6 +9,7 @@ services:
       - POSTGRES_USER=franciscomichea
       - POSTGRES_PASSWORD=password_secreto
 
+  # Servicio de Aplicación Web (Django)
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -17,6 +19,9 @@ services:
       - "8000:8000"
     environment:
       - DB_HOST=db
+      - POSTGRES_DB=ferreteria_db
+      - POSTGRES_USER=franciscomichea
+      - POSTGRES_PASSWORD=password_secreto
     depends_on:
       - db
 

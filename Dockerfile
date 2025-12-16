@@ -1,29 +1,25 @@
-# Usamos Python ligero
+# Usamos una imagen base oficial de Python ligera
 FROM python:3.12-slim
 
-# Configuraciones para que Python no guarde caché innecesaria
+# Variables de entorno para optimizar Python en Docker
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Carpeta de trabajo dentro del contenedor
+# Establecemos el directorio de trabajo
 WORKDIR /app
 
-# Instalamos dependencias del sistema para PostgreSQL
-RUN apt-get update && apt-get install -y \
-    gcc \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Instalamos dependencias del sistema necesarias para PostgreSQL
+RUN apt-get update && apt-get install -y     gcc     libpq-dev     && rm -rf /var/lib/apt/lists/*
 
-# Instalamos las librerías de tu proyecto
+# Instalamos las dependencias del proyecto
 COPY requirements.txt /app/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copiamos todo el código
+# Copiamos el código fuente del proyecto
 COPY . /app/
 
-# Exponemos el puerto
+# Exponemos el puerto donde corre Django
 EXPOSE 8000
 
-# Comando de arranque
+# Comando por defecto al iniciar el contenedor
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
